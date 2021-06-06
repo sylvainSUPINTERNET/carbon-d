@@ -1,9 +1,32 @@
+import {useEffect} from 'react';
+
 export const General = props => {
+
+    useEffect( () => {
+        
+    }, []);
+
     return (
         <div>
             <div className="d-flex mt-4">
                 <h3>Inventaire</h3>
             </div>
+
+            <div className="container-inventory">
+                <div className="d-flex">
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                </div>
+                <div className="d-flex">
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
+                </div>
+            </div>
+
             <div className="d-flex mt-4">
                 <div style={{flexGrow:"1"}}>
                     <h4>Niveau 1</h4>
