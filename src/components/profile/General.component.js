@@ -1,9 +1,19 @@
-import {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import {userDetails} from "../../api/profile/General.api";
+import { GeneralInventory } from './General.inventory.component';
+
 
 export const General = props => {
 
+    const [userProfileDetails, setUserProfileDetails] = useState(null);
+
     useEffect( () => {
-        
+        async function getUserDetails() {
+            const resp = await userDetails();
+            const jsonData = await resp.json();
+            setUserProfileDetails(jsonData);
+        }
+        getUserDetails();
     }, []);
 
     return (
@@ -11,21 +21,8 @@ export const General = props => {
             <div className="d-flex mt-4">
                 <h3>Inventaire</h3>
             </div>
-
-            <div className="container-inventory">
-                <div className="d-flex">
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                </div>
-                <div className="d-flex">
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                </div>
-            </div>
+        
+            <GeneralInventory userProfileData={userProfileDetails}/>
 
             <div className="d-flex mt-4">
                 <div style={{flexGrow:"1"}}>

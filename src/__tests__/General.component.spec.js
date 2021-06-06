@@ -17,16 +17,56 @@ const endpoints = {
     USER_DETAILS : "/users/me"
 }
 
+
+const userDetailsOkResponse = {
+    "email": "test@test.com",
+    "firstName": "testeur",
+    "lastName": "testName",
+    "provider": "testProvider",
+    "profile": {
+        "carbong": 0,
+        "level": 70
+    },
+    "inventory": {
+        "id": 1,
+        "maxSlot": 3,
+        "items": [
+            {
+                "id": 1,
+                "uuid": "15886530-5660-4fc7-ba09-7e4557f4447a",
+                "unitPrice": 1,
+                "levelRequired": 1,
+                "mediaUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_rune_01.jpg",
+                "maxStack": 2,
+                "description": "Réinitialiser votre nombre de swipe pour la journée !",
+                "isConsumable": true,
+                "effects": [
+                    {
+                        "id": 1,
+                        "name": "Pierre de foyer",
+                        "description": "Réinitialise le nombre de swipe à 60."
+                    }
+                ],
+                "itemTypes": [
+                    {
+                        "id": 1,
+                        "name": "Divers"
+                    }
+                ]
+            }
+        ]
+    }
+}
+
 const mockData = () => {
-    userDetailsOkResponse: {}
+    userDetailsOkResponse
 }
 
 const api = {
     userDetailsOk : () => {
         return nock(API_URL).get(endpoint.USER_DETAILS).query({ details:"profile,inventory"}).reply(200, 
-            {
-                // mock
-            },{ 
+            mockData.userDetailsOkResponse,
+        { 
             'Access-Control-Allow-Origin': '*', 
             'Content-type': 'application/json' 
           })
@@ -57,6 +97,8 @@ it('container for inventory is initialized', () => {
 it('userDetails must be called', () => {
     const wrapper = shallow(<General />);
     expect(wrapper.find('.container-inventory').length).toEqual(1);
+
+    expect()
 })
 
 /*
