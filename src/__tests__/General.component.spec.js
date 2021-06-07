@@ -27,6 +27,7 @@ const userDetailsOkResponse = {
         "carbong": 0,
         "level": 70
     },
+
     "inventory": {
         "id": 1,
         "maxSlot": 3,
@@ -97,8 +98,6 @@ it('container for inventory is initialized', () => {
 it('userDetails must be called', () => {
     const wrapper = shallow(<General />);
     expect(wrapper.find('.container-inventory').length).toEqual(1);
-
-    expect()
 })
 
 /*
