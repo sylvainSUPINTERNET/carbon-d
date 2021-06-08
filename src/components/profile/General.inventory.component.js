@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-
+    
 export const GeneralInventory = (props) => {
 
     const INVENTORY_SPLIT_FACTOR = 4;
@@ -15,7 +15,7 @@ export const GeneralInventory = (props) => {
         let invItemsLines = [];
 
         let k = [];
-        for ( let i = 1; i < maxSlot; i++) {
+        for ( let i = 1; i < maxSlot; i++) {    
             if ( items[i - 1 ] ) {
                 k = [...k, items[i -1 ]];
             } else {
@@ -27,7 +27,7 @@ export const GeneralInventory = (props) => {
             }   
         }
         setInvItemsLines(invItemsLines);
-        console.log(invItemsLines);
+
         return invItemsLines;
     }
     
@@ -41,22 +41,7 @@ export const GeneralInventory = (props) => {
     return (
     
         <div className="container-inventory">
-           <div>Test : {JSON.stringify(props)}</div>
            <div>
-               {/*
-                                   <div className="d-flex">
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    </div>
-                    <div className="d-flex">
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                        <div style={{"background": "red", "flex": "1", "margin": "5px"}}>ok</div>
-                    </div>
-               */}
              {invItemsLines && invItemsLines.length && invItemsLines.map( (line,i) => {
                         return <div className="d-flex">
                             {
