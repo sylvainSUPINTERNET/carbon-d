@@ -1,21 +1,16 @@
 import react, {useEffect, useState} from 'react';
 
 export const GeneralLevelBar = props => {    
+    const [remainsBubble, setRemainsBubble] = useState(null)
     useEffect( () => {
-
-        console.log("test")
         if ( props.userProfileData !== null ) {
-            colorXpBar(props);
+            let arrSquare = colorXpBar(props);
+            setRemainsBubble(arrSquare.filter( square => square !== 1).length)
         }
-
-    }, []);
+    }, [props.userProfileData]); // rerender on props change for setRemainsBuble
 
     const colorXpBar = props => {
         let {maxLevel, level, currentLevelProgression} = props.userProfileData.profile;
-        
-
-        const greySquare = level - currentLevelProgression;
-        console.log("grey", greySquare);
 
         let arr = [];
         for ( let i = 0; i < level; i++ ) {
@@ -41,6 +36,8 @@ export const GeneralLevelBar = props => {
         <div className="d-flex mt-4">
             <div style={{flexGrow:"1"}}>
                 <h4>Niveau { props && props.userProfileData !== null && props.userProfileData.profile.level } / { props && props.userProfileData !== null && props.userProfileData.profile.maxLevel } </h4>
+               
+                <p className="text-center">Barre restante : s</p>
                 <div style={{"display": "flex"}}>
                    {
                        props && props.userProfileData !== null && colorXpBar(props).map( square => {
@@ -48,11 +45,6 @@ export const GeneralLevelBar = props => {
                        })
                    }
                 </div>
-
-                {/* <div style={{background: "grey", width: "100%", height: "10px"}}>
-                     <div style={{background: "#6C3483", width: "1%", height: "10px"}}>
-                    </div> 
-                </div> */}
             </div>
         </div>
     </div>
