@@ -38,6 +38,7 @@ export const GeneralLevelBar = props => {
         if ( isCompleted === 1 ) {
             return "#6C3483"
         } else {
+            
             return "grey"
         }
     }
