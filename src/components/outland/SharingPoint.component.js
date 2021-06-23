@@ -3,11 +3,14 @@ import {useEffect, useState} from "react";
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
-const connectToHub = () => {
+const connectToHub = (fnSetConnection, setRoomMessage) => {
     const connection = new HubConnectionBuilder()
     .withUrl('https://localhost:5001/ws/hub')
     .withAutomaticReconnect()
     .build();
+
+
+    fnSetConnection(connection);
 
     
     if ( connection ) {
@@ -30,6 +33,7 @@ const connectToHub = () => {
 
                 connection.on('GrpMessage', data => {
                     console.log(data);
+                    setRoomMessage(data);
                 })
             }
         })
@@ -39,14 +43,32 @@ const connectToHub = () => {
 }
 
 export const SharingPoint = () => {
+    const [connection, setConnection] = useState("");
+    const [roomMessage, setRoomMessage] = useState("");
 
     useEffect( () => {
-        connectToHub();
+        connectToHub(setConnection, setRoomMessage);
     },[]);
+
+    const onChange = async (ev, connection, setRoomMessage) => {
+        try {
+            await connection.invoke("SendToGroup", ev.target.value);
+            setRoomMessage(ev.target.value);
+        } catch ( e ) {
+            console.log("Error sending msg", e);
+        }
+    }
 
     return (
         <div>
-            <p>Sharing point : </p>
+            <p>Sharing point : {connection.toString()}</p>
+            <input type="text" onChange={ (ev) => onChange(ev, connection, setRoomMessage) } ></input>
+
+            <div>
+                <h4>Room msg :</h4>
+                <p>{roomMessage}</p>
+            </div>
+
         </div>
     )
 }
