@@ -1,23 +1,16 @@
 import React, {useEffect, useState} from 'react';
+import { config } from '../../api/profile/config';
 import {userDetails} from "../../api/profile/General.api";
 import { GeneralInventory } from './General.inventory.component';
 import { GeneralLevelBar } from './General.levelBar.component';
-
+import { Quests } from './General.quests.component';
 
 
 export const General = props => {
 
+
     const [userProfileDetails, setUserProfileDetails] = useState(null);
-
-    useEffect( () => {
-        async function getUserDetails() {
-            const resp = await userDetails();
-            const jsonData = await resp.json();
-            setUserProfileDetails(jsonData);
-        }
-        getUserDetails();
-    }, []);
-
+   
     return (
         <div>
             <div className="d-flex mt-4">
@@ -32,9 +25,7 @@ export const General = props => {
                     <li>[] => TODO swipe 60x</li>
                 </ul>
             </div>
-            <div className="d-flex mt-4">
-                <h3>Missions du jour</h3>
-            </div>
+            <Quests></Quests>
         </div>
 
     )

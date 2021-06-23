@@ -4,6 +4,7 @@ import { Router, Link } from "@reach/router";
 import { Home } from './components/Home.component';
 import { Profile } from './components/Profile.component';
 import { Menu } from './components/Menu.component';
+import { SharingPoint } from './components/outland/SharingPoint.component';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Router>
           <Home path="/"/>
           <Profile path="/profile"/>
+          <SharingPoint path="/sharing"></SharingPoint>
       </Router>
     </div>
 
