@@ -31,7 +31,7 @@ const connectToHub = (fnSetConnection, setRoomMessage) => {
                     console.log("Error", e);
                 }
 
-                connection.on('GrpMessage', data => {
+                connection.on('grpMessage', data => {
                     console.log(data);
                     setRoomMessage(data);
                 })
@@ -45,10 +45,11 @@ const connectToHub = (fnSetConnection, setRoomMessage) => {
 export const SharingPoint = () => {
     const [connection, setConnection] = useState("");
     const [roomMessage, setRoomMessage] = useState("");
+    const [fileUrlB64, setFileUrlB64] = useState("");
 
     useEffect( () => {
         connectToHub(setConnection, setRoomMessage);
-    },[]);
+    },[fileUrlB64]);
 
     const onChange = async (ev, connection, setRoomMessage) => {
         try {
@@ -57,6 +58,26 @@ export const SharingPoint = () => {
         } catch ( e ) {
             console.log("Error sending msg", e);
         }
+    }
+
+    const onChangeFile = async (ev, setFileUrlB64) => {
+        const file = ev.target.files[0];
+        const { type } = file;
+        console.log("File uploaded type : ", type);
+
+        const reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            const b64FileEncoded = this.result;
+
+            if ( b64FileEncoded !== "") {
+                let downloadUrl = `${b64FileEncoded}`;
+                console.log("file loaded with success, type :", type);
+                setFileUrlB64(downloadUrl)
+            }
+          }, false);
+
+        reader.readAsDataURL(ev.target.files[0]);
     }
 
     return (
@@ -69,6 +90,10 @@ export const SharingPoint = () => {
                 <p>{roomMessage}</p>
             </div>
 
+            <input type="file" id="myfile" name="myfile" onChange={(ev) => {
+                onChangeFile(ev, setFileUrlB64)
+            }}/>
+            <a download href={fileUrlB64}>Download me plz</a>
         </div>
     )
 }
