@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
-const connectToHub = (fnSetConnection, setRoomMessage) => {
+const connectToHub = (fnSetConnection, setRoomMessage, setUploadedB64) => {
     const connection = new HubConnectionBuilder()
     .withUrl('https://localhost:5001/ws/hub')
     .withAutomaticReconnect()
@@ -34,6 +34,12 @@ const connectToHub = (fnSetConnection, setRoomMessage) => {
                 connection.on('grpMessage', data => {
                     console.log(data);
                     setRoomMessage(data);
+                });
+
+                connection.on('grpFile', data => {
+                    console.log("Received file")
+                    console.log(data);
+                    setUploadedB64(data);
                 })
             }
         })
@@ -46,10 +52,11 @@ export const SharingPoint = () => {
     const [connection, setConnection] = useState("");
     const [roomMessage, setRoomMessage] = useState("");
     const [fileUrlB64, setFileUrlB64] = useState("");
+    const [uploadedB64, setUploadedB64] = useState("");
 
     useEffect( () => {
-        connectToHub(setConnection, setRoomMessage);
-    },[fileUrlB64]);
+        connectToHub(setConnection, setRoomMessage, setUploadedB64);
+    },[fileUrlB64, uploadedB64]);
 
     const onChange = async (ev, connection, setRoomMessage) => {
         try {
@@ -60,20 +67,22 @@ export const SharingPoint = () => {
         }
     }
 
-    const onChangeFile = async (ev, setFileUrlB64) => {
+    const onChangeFile = async (ev, setFileUrlB64, connection) => {
         const file = ev.target.files[0];
         const { type } = file;
         console.log("File uploaded type : ", type);
 
         const reader = new FileReader();
 
-        reader.addEventListener("load", function () {
+        reader.addEventListener("load", async function () {
             const b64FileEncoded = this.result;
 
             if ( b64FileEncoded !== "") {
                 let downloadUrl = `${b64FileEncoded}`;
                 console.log("file loaded with success, type :", type);
                 setFileUrlB64(downloadUrl)
+
+                await connection.invoke("SendFileToGroup", downloadUrl);
             }
           }, false);
 
@@ -91,9 +100,12 @@ export const SharingPoint = () => {
             </div>
 
             <input type="file" id="myfile" name="myfile" onChange={(ev) => {
-                onChangeFile(ev, setFileUrlB64)
+                onChangeFile(ev, setFileUrlB64, connection)
             }}/>
             <a download href={fileUrlB64}>Download me plz</a>
+
+            <h3>Uploaded file</h3>
+            <a download href={uploadedB64}>Uploaded file</a>
         </div>
     )
 }
