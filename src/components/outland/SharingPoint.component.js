@@ -1,9 +1,9 @@
 import react from 'react';
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
-const connectToHub = (fnSetConnection, setRoomMessage, setUploadedB64) => {
+const connectToHub = (fnSetConnection, setRoomMessage, setUploadedB64, roomId) => {
     const connection = new HubConnectionBuilder()
     .withUrl('https://localhost:5001/ws/hub')
     .withAutomaticReconnect()
@@ -21,19 +21,22 @@ const connectToHub = (fnSetConnection, setRoomMessage, setUploadedB64) => {
             if ( connection.connectionStarted) {
                 console.log("New client connected");
                 try {
-                    await connection.invoke("AddToGrp", "TOTO")
-                    console.log("Connection added to group TOTO");
+                    await connection.invoke("AddToGrp", roomId)
+                    console.log("Connection added to group :", roomId);
 
                     setTimeout( async () => {
-                        await connection.invoke("SendToGroup", "HELLO Im : ");
+                        await connection.invoke("SendToGroup", "HELLO Im : ", roomId);
                     },2000)
                 } catch ( e ) {
                     console.log("Error", e);
                 }
 
                 connection.on('grpMessage', data => {
+                    console.log("=== RECEIVED ")
                     console.log(data);
-                    setRoomMessage(data);
+                    console.log("RECEIVED ++")
+                    const { message, sendId } = data;
+                    setRoomMessage(message);
                 });
 
                 connection.on('grpFile', data => {
@@ -48,20 +51,26 @@ const connectToHub = (fnSetConnection, setRoomMessage, setUploadedB64) => {
 
 }
 
-export const SharingPoint = () => {
+export const SharingPoint = (props) => {
+
+    let [roomId, setRoomId] = useState("");
+
     const [connection, setConnection] = useState("");
-    const [roomMessage, setRoomMessage] = useState("");
+    let [roomMessage, setRoomMessage] = useState("");
     const [fileUrlB64, setFileUrlB64] = useState("");
     const [uploadedB64, setUploadedB64] = useState("");
 
+
     useEffect( () => {
-        connectToHub(setConnection, setRoomMessage, setUploadedB64);
+        setRoomId(props.roomId);
+        connectToHub(setConnection, setRoomMessage, setUploadedB64, props.roomId);
     },[fileUrlB64, uploadedB64]);
+
 
     const onChange = async (ev, connection, setRoomMessage) => {
         try {
-            await connection.invoke("SendToGroup", ev.target.value);
-            setRoomMessage(ev.target.value);
+            await connection.invoke("SendToGroup", ev.target.innerText, roomId);
+            setRoomMessage(ev.target.innerText);
         } catch ( e ) {
             console.log("Error sending msg", e);
         }
@@ -82,7 +91,8 @@ export const SharingPoint = () => {
                 console.log("file loaded with success, type :", type);
                 setFileUrlB64(downloadUrl)
 
-                await connection.invoke("SendFileToGroup", downloadUrl);
+                console.log("Send file to ", roomId);
+                await connection.invoke("SendFileToGroup", downloadUrl, roomId);
             }
           }, false);
 
@@ -91,76 +101,24 @@ export const SharingPoint = () => {
 
     return (
         <div>
-            <p>Sharing point : {connection.toString()}</p>
-            <input type="text" onChange={ (ev) => onChange(ev, connection, setRoomMessage) } ></input>
+            <p>Room : {roomId}</p>
 
-            <div>
-                <h4>Room msg :</h4>
-                <p>{roomMessage}</p>
+            <div style={{"display":"flex","background": "red"}}>
+                <div style={{"flex": "1", "background": "yellow", maxHeight: '700px', height:'700px'}}>
+                    <div style={{maxHeight: '700px', height:'700px','overflowY': 'scroll'}} contentEditable={true}  onInput={(ev) => onChange(ev, connection, setRoomMessage)} >
+                    </div>
+                </div>
+                <div style={{"flex": "1", "background":"purple"}}>
+                    {roomMessage}
+                </div>
             </div>
 
             <input type="file" id="myfile" name="myfile" onChange={(ev) => {
                 onChangeFile(ev, setFileUrlB64, connection)
             }}/>
-            <a download href={fileUrlB64}>Download me plz</a>
 
             <h3>Uploaded file</h3>
-            <a download href={uploadedB64}>Uploaded file</a>
+            <a download href={uploadedB64}>Download</a>
         </div>
     )
 }
-
-
-//const [ connection, setConnection ] = useState(null);
-
-    
-// useEffect( () => {
-
-
-//     const newConnection = new HubConnectionBuilder()
-//     .withUrl('https://localhost:5001/ws/hub')
-//     .withAutomaticReconnect()
-//     .build();
-
-//     setConnection(newConnection);
-
-//     async function getUserDetails() {
-//         const resp = await userDetails();
-//         const jsonData = await resp.json();
-//         setUserProfileDetails(jsonData);
-//     }
-//     getUserDetails();
-// }, []);
-
-// useEffect( () => {
-//     if ( connection ) {
-//         connection.start()
-//         .then( async result => {
-//             console.log("Client connected")
-//             console.log(connection.connectionId)
-            
-//             if ( connection.connectionStarted ) {
-//                 try {
-//                     await connection.invoke("AddToGrp", "GROUPNAMETEST")
-//                     //await connection.send("AddToRoom", connection.connectionId)
-//                     console.log("Message send with success");
-//                     const resp = await fetch('https://localhost:5001/api/rooms?connectionId='+connection.connectionId)
-//                     const j = await resp.json()
-//                     console.log(j)
-                    
-
-//                 } catch (e) {
-//                     console.log("Fail to send message", e)
-//                 }
-
-            
-//             connection.on('GrpMessage', msg => {
-//                 console.log("message received from your room : ")
-//                 console.log(msg)
-//             })
-
-//             }
-
-//         }).catch( err => console.log("Connection ws hub failed", err))
-//     }
-// }, [connection])

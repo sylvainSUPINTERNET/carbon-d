@@ -1,10 +1,10 @@
-import logo from './7382.png';
-import { render } from "react-dom";
-import { Router, Link } from "@reach/router";
+import { Router, Redirect } from "@reach/router";
 import { Home } from './components/Home.component';
 import { Profile } from './components/Profile.component';
 import { Menu } from './components/Menu.component';
 import { SharingPoint } from './components/outland/SharingPoint.component';
+import { nanoid } from 'nanoid'
+
 
 function App() {
   return (
@@ -13,7 +13,8 @@ function App() {
       <Router>
           <Home path="/"/>
           <Profile path="/profile"/>
-          <SharingPoint path="/sharing"></SharingPoint>
+          <Redirect from={`/sharing`} to={`/sharing/${nanoid(6)}`} noThrow></Redirect>
+          <SharingPoint exact path="/sharing/:roomId"></SharingPoint>
       </Router>
     </div>
 
