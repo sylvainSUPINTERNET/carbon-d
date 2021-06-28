@@ -8,3 +8,11 @@ export const userDetails = async () => {
         "mode": "cors"
     });
 }
+
+export const me = async (scopesList) => {
+    return await fetch(`${config.URL}/users/me`, {
+        "method": "GET",
+        "credentials": "include",
+        "mode":"cors"
+    });
+}

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { config } from '../../api/profile/config';
-import {userDetails} from "../../api/profile/General.api";
+import {userDetails, me} from "../../api/profile/General.api";
 import { GeneralInventory } from './General.inventory.component';
 import { GeneralLevelBar } from './General.levelBar.component';
 import { Quests } from './General.quests.component';
@@ -10,7 +10,18 @@ export const General = props => {
 
 
     const [userProfileDetails, setUserProfileDetails] = useState(null);
-   
+
+
+    const getMe = async (["profile","iventory"]) => {
+        const data = await me();
+        const profileJson = await data.json();
+        setUserProfileDetails(profileJson);
+    }
+
+    useEffect( () => {
+        getMe();
+    }, [userProfileDetails]);
+
     return (
         <div>
             <div className="d-flex mt-4">
