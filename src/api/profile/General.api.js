@@ -10,7 +10,7 @@ export const userDetails = async () => {
 }
 
 export const me = async (scopesList) => {
-    return await fetch(`${config.URL}/users/me`, {
+    return await fetch(`${config.URL}/users/me?details=${scopesList.join("&")}`, {
         "method": "GET",
         "credentials": "include",
         "mode":"cors"

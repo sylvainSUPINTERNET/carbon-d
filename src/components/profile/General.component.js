@@ -3,31 +3,38 @@ import { config } from '../../api/profile/config';
 import {userDetails, me} from "../../api/profile/General.api";
 import { GeneralInventory } from './General.inventory.component';
 import { GeneralLevelBar } from './General.levelBar.component';
+import { Specialization } from './Specialisation.component';
+
 import { Quests } from './General.quests.component';
 
 
 export const General = props => {
 
+    const scopesProfile = ["profile", "inventory"];
 
     const [userProfileDetails, setUserProfileDetails] = useState(null);
 
 
-    const getMe = async (["profile","iventory"]) => {
-        const data = await me();
+    const getMe = async scopesProfile => {
+        const data = await me(scopesProfile);
         const profileJson = await data.json();
-        setUserProfileDetails(profileJson);
+        setUserProfileDetails(profileJson.userData);
     }
 
     useEffect( () => {
-        getMe();
-    }, [userProfileDetails]);
+        getMe(scopesProfile);
+    }, []);
+
+    
 
     return (
         <div>
+            {userProfileDetails !== null && <h4> Classe : {userProfileDetails.profile.classe} </h4>}
+
             <div className="d-flex mt-4">
                 <h3>Inventaire</h3>
             </div>
-        
+
             <GeneralInventory userProfileData={userProfileDetails}/>
             <GeneralLevelBar userProfileData={userProfileDetails}/>
 
