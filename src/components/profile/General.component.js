@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { config } from '../../api/profile/config';
 import {userDetails, me} from "../../api/profile/General.api";
 import { GeneralInventory } from './General.inventory.component';
 import { GeneralLevelBar } from './General.levelBar.component';
@@ -29,8 +28,6 @@ export const General = props => {
 
     return (
         <div>
-            {userProfileDetails !== null && <h4> Classe : {userProfileDetails.profile.classe} </h4>}
-
             <div className="d-flex mt-4">
                 <h3>Inventaire</h3>
             </div>

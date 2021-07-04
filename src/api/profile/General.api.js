@@ -16,3 +16,11 @@ export const me = async (scopesList) => {
         "mode":"cors"
     });
 }
+
+export const getClasses = async () => {
+    return await fetch(`${config.URL}/classes`, {
+        "method": "GET",
+        "credentials": "include",
+        "mode":"cors"
+    });
+}
