@@ -24,3 +24,11 @@ export const getClasses = async () => {
         "mode":"cors"
     });
 }
+
+export const joinClasses = async (classeName) => {
+    return await fetch(`${config.URL}/classes/${classeName}`, {
+        "method": "PUT",
+        "credentials": "include",
+        "mode":"cors"
+    });
+}

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Card, Container} from 'react-bootstrap'
-import {userDetails, me, getClasses} from "../../api/profile/General.api";
+import {userDetails, me, getClasses, joinClasses} from "../../api/profile/General.api";
 import { ItemCard, itemCard } from "../item/item.component";
 import { ButtonPpc } from "../utils/Button";
 
@@ -33,8 +33,6 @@ export const Specialization = (props) => {
 
     const joinClasse = (ev, classeName) => {
         setDisplayModal(true);
-        console.log("Classe to join" + classeName);
-        console.log(joinIsLoading);
     }
 
     const hideModal = () => {
@@ -46,9 +44,21 @@ export const Specialization = (props) => {
         setDisplayModal(false);
     }
 
-    const handleSuccessModal = () => {
-        setJoinIsLoading(true);
+    const handleSuccessModal = async (classeName) => {
+        console.log("HANDLE SUCCESS");
         setDisplayModal(false);
+
+        setJoinIsLoading(true);
+        try {
+            const data = await joinClasses(classeName)
+            const jData = await data.json();
+            console.log(jData);
+            setJoinIsLoading(false);
+        } catch ( e ) {
+            console.log(e);
+            setJoinIsLoading(false);
+        }
+
     }
 
 
@@ -100,7 +110,7 @@ export const Specialization = (props) => {
                                     modalDisplay={displayModal}
                                     hideModal={hideModal}
                                     handleCloseModal={handleCloseModal}
-                                    handleSuccessModal={handleSuccessModal}
+                                    handleSuccessModal={() => {handleSuccessModal(classe.name)} }
                                     modalTitle={"Classe : " + classe.name}
                                     modalBody={"Renjoindre cette classe est définitif !"}
                                     modalCancel={"Annuler"}
