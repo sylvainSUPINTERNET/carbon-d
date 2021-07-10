@@ -2,12 +2,15 @@ import React, {useState, useEffect} from "react";
 import {Card, Container} from 'react-bootstrap'
 import {userDetails, me, getClasses} from "../../api/profile/General.api";
 import { ItemCard, itemCard } from "../item/item.component";
+import { ButtonPpc } from "../utils/Button";
 
 export const Specialization = (props) => {
     const scopesProfile = ["profile", "inventory"];
 
     const [userProfileDetails, setUserProfileDetails] = useState(null);
     const [classesList, setClassesList] = useState(null);
+
+    const [joinIsLoading, setJoinIsLoading] = useState(false);
 
 
     const getMe = async scopesProfile => {
@@ -26,6 +29,16 @@ export const Specialization = (props) => {
         getMe(scopesProfile);
         getListClasses();
     }, []);
+
+    const joinClasse = (ev, classeName) => {
+        setJoinIsLoading(true);
+        console.log("Classe to join" + classeName);
+        console.log(joinIsLoading);
+        setTimeout( () => {
+            setJoinIsLoading(false);
+        },2000);
+    }
+
 
     return (
         <div>
@@ -65,7 +78,8 @@ export const Specialization = (props) => {
                                 </div>
                                 </blockquote>
                                 <div style={{'display': 'flex', 'justifyContent': 'flex-end'}}>
-                                    <button className="btn btn-info">Rejoindre</button>
+                                    <button className="btn btn-info" onClick={(ev) => joinClasse(ev, classe.name)}>Rejoindre</button>
+                                    <ButtonPpc classNameBtn="btn btn-info" btnText="Rejoindre" click={(ev) => {joinClasse(ev, classe.name)}} isLoading={joinIsLoading} mustBeConfirmed={true}/>
                                 </div>
                             </div>
                     })
