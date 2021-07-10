@@ -11,6 +11,7 @@ export const Specialization = (props) => {
     const [classesList, setClassesList] = useState(null);
 
     const [joinIsLoading, setJoinIsLoading] = useState(false);
+    const [displayModal, setDisplayModal] = useState(false);
 
 
     const getMe = async scopesProfile => {
@@ -31,12 +32,23 @@ export const Specialization = (props) => {
     }, []);
 
     const joinClasse = (ev, classeName) => {
-        setJoinIsLoading(true);
+        setDisplayModal(true);
         console.log("Classe to join" + classeName);
         console.log(joinIsLoading);
-        setTimeout( () => {
-            setJoinIsLoading(false);
-        },2000);
+    }
+
+    const hideModal = () => {
+        setJoinIsLoading(false);
+        setDisplayModal(false);
+    }
+    const handleCloseModal= () => {
+        setJoinIsLoading(false);
+        setDisplayModal(false);
+    }
+
+    const handleSuccessModal = () => {
+        setJoinIsLoading(true);
+        setDisplayModal(false);
     }
 
 
@@ -79,7 +91,21 @@ export const Specialization = (props) => {
                                 </blockquote>
                                 <div style={{'display': 'flex', 'justifyContent': 'flex-end'}}>
                                     <button className="btn btn-info" onClick={(ev) => joinClasse(ev, classe.name)}>Rejoindre</button>
-                                    <ButtonPpc classNameBtn="btn btn-info" btnText="Rejoindre" click={(ev) => {joinClasse(ev, classe.name)}} isLoading={joinIsLoading} mustBeConfirmed={true}/>
+                                    <ButtonPpc 
+                                    classNameBtn="btn btn-info" 
+                                    btnText="Rejoindre" 
+                                    click={(ev) => {joinClasse(ev, classe.name)}}
+                                    isLoading={joinIsLoading} 
+                                    mustBeConfirmed={true}
+                                    modalDisplay={displayModal}
+                                    hideModal={hideModal}
+                                    handleCloseModal={handleCloseModal}
+                                    handleSuccessModal={handleSuccessModal}
+                                    modalTitle={"Classe : " + classe.name}
+                                    modalBody={"Renjoindre cette classe est définitif !"}
+                                    modalCancel={"Annuler"}
+                                    modalOk={"Confirmer"}
+                                    />
                                 </div>
                             </div>
                     })
