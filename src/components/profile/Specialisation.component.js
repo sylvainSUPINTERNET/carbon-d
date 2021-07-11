@@ -29,7 +29,7 @@ export const Specialization = (props) => {
     useEffect( () => {
         getMe(scopesProfile);
         getListClasses();
-    }, []);
+    }, [userProfileDetails]);
 
     const joinClasse = (ev, classeName) => {
         setDisplayModal(true);
@@ -45,14 +45,12 @@ export const Specialization = (props) => {
     }
 
     const handleSuccessModal = async (classeName) => {
-        console.log("HANDLE SUCCESS");
         setDisplayModal(false);
 
         setJoinIsLoading(true);
         try {
             const data = await joinClasses(classeName)
             const jData = await data.json();
-            console.log(jData);
             setJoinIsLoading(false);
         } catch ( e ) {
             console.log(e);
@@ -64,20 +62,20 @@ export const Specialization = (props) => {
 
     return (
         <div>
-
+  
         {userProfileDetails !== null && userProfileDetails.profile.classe !== null  && 
             <div>
                 <h4> Classe : {userProfileDetails.profile.classe} </h4>
             </div>
-            }
-
-            <div>
-            {userProfileDetails !== null && userProfileDetails.profile.classe === null  &&
+        }
+        
+        {userProfileDetails !== null && userProfileDetails.profile.classe === null  &&
                 <div className="mt-5 text-center">
                     <h4>Pour débuter, choisissez une classe qui vous correspond et permettra d'obtenir de nombreux avantage par la suite !</h4>
                 </div>
-            }
-            </div>
+        }
+            
+        {userProfileDetails !== null && userProfileDetails.profile.classe === null  &&
             <div className="mt-5">
             { classesList !== null && 
                     classesList.map( classe => {
@@ -100,7 +98,6 @@ export const Specialization = (props) => {
                                 </div>
                                 </blockquote>
                                 <div style={{'display': 'flex', 'justifyContent': 'flex-end'}}>
-                                    <button className="btn btn-info" onClick={(ev) => joinClasse(ev, classe.name)}>Rejoindre</button>
                                     <ButtonPpc 
                                     classNameBtn="btn btn-info" 
                                     btnText="Rejoindre" 
@@ -119,8 +116,9 @@ export const Specialization = (props) => {
                                 </div>
                             </div>
                     })
+                }
+                </div>
             }
-            </div>
         </div>
 
     )
